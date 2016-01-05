@@ -327,6 +327,13 @@ def addMember(ChatRoomName, UserNames):
 
 	return DeletedList
 
+def filterEmoji(nickName):
+    regx = r'(<span[^>]*?>.*?<\/span>)'
+    doms = re.findall(regx, nickName)
+    for dom in doms:
+        nickName = nickName.replace(dom, '')
+    return nickName
+
 def main():
 
 	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
@@ -372,7 +379,7 @@ def main():
 			NickNames.append(Member['NickName'].encode('utf-8'))
                         
 		print '第%s组...' % (i + 1)
-		print ', '.join(NickNames)
+		print ', '.join(map(filterEmoji, NickNames))
 		print '回车键继续...'
 		raw_input()
 
