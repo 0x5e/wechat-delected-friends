@@ -10,6 +10,7 @@ import xml.dom.minidom
 import json
 import sys
 import math
+import sys
 
 DEBUG = False
 
@@ -355,7 +356,7 @@ def main():
 	MemberList = webwxgetcontact()
 
 	MemberCount = len(MemberList)
-	print '通讯录共%s位好友' % MemberCount
+	print '通讯录共%s位好友\n\n' % MemberCount
 
 	ChatRoomName = ''
 	result = []
@@ -370,12 +371,16 @@ def main():
 			Member = MemberList[i * MAX_GROUP_NUM + j]
 			UserNames.append(Member['UserName'])
 			NickNames.append(Member['NickName'].encode('utf-8'))
-                        
+
+		sys.stdout.write('###')
+		sys.stdout.flush()
+          
+   		'''          
 		print '第%s组...' % (i + 1)
 		print ', '.join(NickNames)
 		print '回车键继续...'
 		raw_input()
-
+		'''
 		# 新建群组/添加成员
 		if ChatRoomName == '':
 			(ChatRoomName, DeletedList) = createChatroom(UserNames)
@@ -391,7 +396,7 @@ def main():
 
 		# 删除成员
 		deleteMember(ChatRoomName, UserNames)
-
+		
 	# todo 删除群组
 
 
@@ -403,7 +408,7 @@ def main():
 				NickName += '(%s)' % Member['RemarkName']
 			resultNames.append(NickName.encode('utf-8'))
 
-	print '---------- 被删除的好友列表 ----------'
+	print '\n\n\n---------- 被删除的好友列表 ----------'
 	print '\n'.join(resultNames)
 	print '-----------------------------------'
 
