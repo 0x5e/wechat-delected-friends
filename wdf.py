@@ -410,12 +410,9 @@ def main():
 			NickNames.append(Member['NickName'].encode('utf-8'))
 
 		#	进度条
-		progress='-'*10
-		progress_str='%s'%''.join(map(lambda x:'#',progress[:int((10*(i+1))/group_num)]))
-		#print '[',progress_str,''.join('-'*(10-len(progress_str))),']',
-		#print '(当前,你被%d人删除,好友共%d人'%(len(result),len(MemberList)),'\r',
-		print('[',progress_str,''.join('-'*(10-len(progress_str))),']', end=' ')
-		print('(当前,你被%d人删除,好友共%d人'%(len(result),len(MemberList)),'\r',end=' ')
+		progress = 10 * (i + 1) / group_num
+		print('[', '#' * progress, '-' * (10 - progress), ']', end=' ')
+		print('(当前,你被%d人删除,好友共%d人)'%(len(result),len(MemberList)),'\r',end=' ')
 
 		# print '第%s组...' % (i + 1)
 
