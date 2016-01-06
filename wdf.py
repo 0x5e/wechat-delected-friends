@@ -374,8 +374,8 @@ def main():
                         
 		print '第%s组...' % (i + 1)
 		print ', '.join(NickNames)
-		print '回车键继续...'
-		raw_input()
+		# print '回车键继续...'
+		# raw_input()
 
 		# 新建群组/添加成员
 		if ChatRoomName == '':
