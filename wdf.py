@@ -53,6 +53,14 @@ except:
 	# python 3
 	pass
 
+def getRequest(url, data=None):
+	try:
+		data = data.encode('utf-8')
+	except:
+		pass
+	finally:
+		return wdf_urllib.Request(url = url, data = data)
+
 def getUUID():
 	global uuid
 
@@ -64,9 +72,9 @@ def getUUID():
 		'_': int(time.time()),
 	}
 
-	request = wdf_urllib.Request(url = url, data = urlencode(params))
+	request = getRequest(url = url, data = urlencode(params))
 	response = wdf_urllib.urlopen(request)
-	data = response.read()
+	data = response.read().decode('utf-8', 'replace')
 
 	# print data
 
@@ -91,7 +99,7 @@ def showQRImage():
 		'_': int(time.time()),
 	}
 
-	request = wdf_urllib.Request(url = url, data = urlencode(params))
+	request = getRequest(url = url, data = urlencode(params))
 	response = wdf_urllib.urlopen(request)
 
 	tip = 1
@@ -115,9 +123,9 @@ def waitForLogin():
 
 	url = 'https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=%s&uuid=%s&_=%s' % (tip, uuid, int(time.time()))
 
-	request = wdf_urllib.Request(url = url)
+	request = getRequest(url = url)
 	response = wdf_urllib.urlopen(request)
-	data = response.read()
+	data = response.read().decode('utf-8', 'replace')
 	
 	# print data
 	# print(data)
@@ -148,9 +156,9 @@ def waitForLogin():
 def login():
 	global skey, wxsid, wxuin, pass_ticket, BaseRequest
 
-	request = wdf_urllib.Request(url = redirect_uri)
+	request = getRequest(url = redirect_uri)
 	response = wdf_urllib.urlopen(request)
-	data = response.read()
+	data = response.read().decode('utf-8', 'replace')
 
 	# print data
 	# print(data)
@@ -204,7 +212,7 @@ def webwxinit():
 		'BaseRequest': BaseRequest
 	}
 
-	request = wdf_urllib.Request(url = url, data = json.dumps(params))
+	request = getRequest(url = url, data = json.dumps(params))
 	request.add_header('ContentType', 'application/json; charset=UTF-8')
 	response = wdf_urllib.urlopen(request)
 	data = response.read()
@@ -216,7 +224,7 @@ def webwxinit():
 		f.close()
 
 	# print data
-	# print(data)
+	data = data.decode('utf-8', 'replace')
 
 	global ContactList, My
 	dic = json.loads(data)
@@ -237,10 +245,10 @@ def webwxgetcontact():
 	
 	url = base_uri + '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s' % (pass_ticket, skey, int(time.time()))
 
-	request = wdf_urllib.Request(url = url)
+	request = getRequest(url = url)
 	request.add_header('ContentType', 'application/json; charset=UTF-8')
 	response = wdf_urllib.urlopen(request)
-	data = response.read()
+	data = response.read().decode('utf-8', 'replace')
 
 	if DEBUG:
 		#f = open(os.getcwd() + '/webwxgetcontact.json', 'wb')
@@ -285,10 +293,10 @@ def createChatroom(UserNames):
 		'Topic': '',
 	}
 
-	request = wdf_urllib.Request(url = url, data = json.dumps(params))
+	request = getRequest(url = url, data = json.dumps(params))
 	request.add_header('ContentType', 'application/json; charset=UTF-8')
 	response = wdf_urllib.urlopen(request)
-	data = response.read()
+	data = response.read().decode('utf-8', 'replace')
 
 	# print data
 
@@ -314,10 +322,10 @@ def deleteMember(ChatRoomName, UserNames):
 		'DelMemberList': ','.join(UserNames),
 	}
 
-	request = wdf_urllib.Request(url = url, data = json.dumps(params))
+	request = getRequest(url = url, data = json.dumps(params))
 	request.add_header('ContentType', 'application/json; charset=UTF-8')
 	response = wdf_urllib.urlopen(request)
-	data = response.read()
+	data = response.read().decode('utf-8', 'replace')
 
 	# print data
 
@@ -340,10 +348,10 @@ def addMember(ChatRoomName, UserNames):
 		'AddMemberList': ','.join(UserNames),
 	}
 
-	request = wdf_urllib.Request(url = url, data = json.dumps(params))
+	request = getRequest(url = url, data = json.dumps(params))
 	request.add_header('ContentType', 'application/json; charset=UTF-8')
 	response = wdf_urllib.urlopen(request)
-	data = response.read()
+	data = response.read().decode('utf-8', 'replace')
 
 	# print data
 
@@ -415,7 +423,7 @@ def main():
 
 		#	进度条
 		progress='-'*10
-		progress_str='%s'%''.join(map(lambda x:'#',progress[:(10*(i+1))/group_num]))
+		progress_str='%s'%''.join(map(lambda x:'#',progress[:int((10*(i+1))/group_num)]))
 		#print '[',progress_str,''.join('-'*(10-len(progress_str))),']',
 		#print '(当前,你被%d人删除,好友共%d人'%(len(result),len(MemberList)),'\r',
 		print('[',progress_str,''.join('-'*(10-len(progress_str))),']', end=' ')
