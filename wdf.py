@@ -372,7 +372,7 @@ def main():
 			NickNames.append(Member['NickName'].encode('utf-8'))
                         
 		print '第%s组...' % (i + 1)
-		print ', '.join(NickNames)
+		print ', '.join(map(lambda x:re.sub(r'<span[^>]*?>.*?<\/span>', '', x), NickNames))
 		print '回车键继续...'
 		raw_input()
 
