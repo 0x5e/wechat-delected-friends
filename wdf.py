@@ -23,6 +23,9 @@ import sys
 import math
 import subprocess
 import ssl
+import urllib
+import urllib2
+import cookielib
 
 DEBUG = False
 
@@ -49,6 +52,16 @@ BaseRequest = {}
 ContactList = []
 My = []
 SyncKey = ''
+
+    
+cj = cookielib.LWPCookieJar()
+cookie_support = urllib2.HTTPCookieProcessor(cj)
+opener = urllib2.build_opener(cookie_support, urllib2.HTTPHandler)
+urllib2.install_opener(opener)
+
+postdata = {
+    'a' : '1'
+}
 
 try:
     xrange
@@ -166,10 +179,8 @@ def waitForLogin():
 def login():
     global skey, wxsid, wxuin, pass_ticket, BaseRequest
 
-    request = getRequest(url=redirect_uri)
-    response = wdf_urllib.urlopen(request)
-    data = response.read().decode('utf-8', 'replace')
-
+    data = urllib2.urlopen(redirect_uri).read().decode('utf-8', 'replace')
+    
     # print(data)
 
     '''
@@ -258,16 +269,10 @@ def webwxinit():
 
 
 def webwxgetcontact():
-
     url = base_uri + \
-        '/webwxgetcontact?pass_ticket=%s&skey=%s&r=%s' % (
-            pass_ticket, skey, int(time.time()))
-
-    request = getRequest(url=url)
-    request.add_header('ContentType', 'application/json; charset=UTF-8')
-    response = wdf_urllib.urlopen(request)
-    data = response.read()
-
+        '/webwxgetcontact?skey=%s&r=%s' % (
+            skey, int(time.time()))
+    data = urllib2.urlopen(url).read()
     if DEBUG:
         f = open(os.path.join(os.getcwd(), 'webwxgetcontact.json'), 'wb')
         f.write(data)
