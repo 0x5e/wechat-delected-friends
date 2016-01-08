@@ -449,7 +449,7 @@ def main():
 			if Member['RemarkName'] != '':
 				NickName += '(%s)' % Member['RemarkName']
 			resultNames.append(NickName.encode('utf-8'))
-
+	print('\n----------最终你被%d人删除-----------' %(len(result)))
 	print('\n---------- 被删除的好友列表 ----------')
 	# 过滤emoji
 	resultNames=list(map(lambda x:re.sub(r'<span.+/span>','',x),resultNames))
