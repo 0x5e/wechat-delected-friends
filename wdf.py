@@ -23,12 +23,12 @@ import sys
 import math
 import subprocess
 import ssl
-import thread
+import threading
 
 DEBUG = False
 
 MAX_GROUP_NUM = 35  # 每组人数
-INTERFACE_CALLING_INTERVAL = 20  # 接口调用时间间隔, 间隔太短容易出现"操作太频繁", 会被限制操作半小时左右
+INTERFACE_CALLING_INTERVAL = 16  # 接口调用时间间隔, 间隔太短容易出现"操作太频繁", 会被限制操作半小时左右
 MAX_PROGRESS_LEN = 50
 
 QRImagePath = os.path.join(os.getcwd(), 'qrcode.jpg')
@@ -128,6 +128,7 @@ def showQRImage():
     f = open(QRImagePath, 'wb')
     f.write(response.read())
     f.close()
+    time.sleep(1)
 
     if sys.platform.find('darwin') >= 0:
         subprocess.call(['open', QRImagePath])
@@ -495,7 +496,7 @@ def main():
     MemberList = webwxgetcontact()
 
     print('开启心跳线程')
-    thread.start_new_thread(heartBeatLoop, ())
+    threading.Thread(target=heartBeatLoop)
 
     MemberCount = len(MemberList)
     print('通讯录共%s位好友' % MemberCount)
@@ -534,13 +535,13 @@ def main():
 
         # 进度条
         progress = MAX_PROGRESS_LEN * (i + 1) / group_num
-        print('[', '#' * progress, '-' * (MAX_PROGRESS_LEN - progress), ']', end=' ')
+        print('[', '#' * int(progress), '-' * int(MAX_PROGRESS_LEN - progress), ']', end=' ')
         print('新发现你被%d人删除' % DeletedCount)
         for i in range(DeletedCount):
-            if d[DeletedList[i]][1] != '':
-                print(d[DeletedList[i]][0] + '(%s)' % d[DeletedList[i]][1])
+            if d[DeletedList[i]][1].decode('utf-8') != '':
+                print('%s(%s)' % (d[DeletedList[i]][0].decode('utf-8'),d[DeletedList[i]][1].decode('utf-8')))
             else:
-                print(d[DeletedList[i]][0])
+                print(d[DeletedList[i]][0].decode('utf-8'))
 
         if i != group_num - 1:
             print('正在继续查找,请耐心等待...')
@@ -551,14 +552,14 @@ def main():
     print('\n结果汇总完毕,20s后可重试...')
     resultNames = []
     for r in result:
-        if d[r][1] != '':
-            resultNames.append(d[r][0] + '(%s)' % d[r][1])
+        if d[r][1].decode('utf-8') != '':
+            resultNames.append('%s(%s)' % (d[r][0].decode('utf-8'),d[r][1]).decode('utf-8'))
         else:
-            resultNames.append(d[r][0])
+            resultNames.append(d[r][0].decode('utf-8'))
 
     print('---------- 被删除的好友列表(共%d人) ----------' % len(result))
     # 过滤emoji
-    resultNames = map(lambda x: re.sub(r'<span.+/span>', '', x), resultNames)
+    resultNames = list(map(lambda x: re.sub(r'<span.+/span>', '', x), resultNames))
     if len(resultNames):
         print('\n'.join(resultNames))
     else:
@@ -568,7 +569,6 @@ def main():
 
 # windows下编码问题修复
 # http://blog.csdn.net/heyuxuanzee/article/details/8442718
-
 
 class UnicodeStreamFilter:
 
@@ -580,7 +580,10 @@ class UnicodeStreamFilter:
 
     def write(self, s):
         if type(s) == str:
-            s = s.decode('utf-8')
+            try:
+                s = s.decode('utf-8')
+            except:
+                pass
         s = s.encode(self.encode_to, self.errors).decode(self.encode_to)
         self.target.write(s)
 
@@ -592,3 +595,4 @@ if __name__ == '__main__':
     print('本程序的查询结果可能会引起一些心理上的不适,请小心使用...')
     main()
     print('回车键退出...')
+    input()
