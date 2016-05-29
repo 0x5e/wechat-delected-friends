@@ -15,8 +15,8 @@
 
 没试过被拉黑的情况
 
-Mac OS用法:
-启动Terminal
+Mac OS 用法:
+启动 Terminal
 
 `$ python wdf.py`
 
