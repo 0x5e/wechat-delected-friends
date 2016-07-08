@@ -25,8 +25,8 @@
 
 查询结果可能会引起一些心理上的不适,请小心使用..(逃
 
-Mac OS用法:
-启动Terminal
+Mac OS 用法:
+启动 Terminal
 
 `$ python wdf.py`
 
