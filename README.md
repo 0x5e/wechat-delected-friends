@@ -11,7 +11,7 @@
 
 [Urinx / WeixinBot](https://github.com/Urinx/WeixinBot)：网页版微信API，包含终端版微信及微信机器人
 
-[geeeeeeeeek / electronic-wechat](https://github.com/geeeeeeeeek/electronic-wechat)：💬 A better WeChat on macOS and Linux. Fewer bugs, more features. Built with Electron by Zhongyi Tong.
+[geeeeeeeeek / electronic-wechat](https://github.com/geeeeeeeeek/electronic-wechat)：💬 A better WeChat on macOS and Linux. Fewer bugs, more features. Built with python Django framework.
 
 协议相关文档：
 
